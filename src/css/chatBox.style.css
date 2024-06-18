@@ -13,7 +13,7 @@
     display: flex;
     align-items: center;
     padding: 0 2em;
-    position: fixed;
+    position: absolute;
     width: 100%;
     z-index: 5;
 }
@@ -280,7 +280,7 @@
     display: flex;
     align-items: end;
     padding: 0.5em 1em;
-    position: fixed;
+    position: absolute;
     bottom: 0;
     z-index: 6;
     width: fit-content;
