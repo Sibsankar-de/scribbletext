@@ -44,7 +44,7 @@
 
 .st-chat-contact-list {
     overflow-y: scroll;
-    height: 75vh;
+    height: calc(100vh - 3.5em - 80px - 3em);
 }
 
 .st-chat-contact-list-item {
@@ -196,7 +196,7 @@
 
     .st-chat-contact-list {
         padding: 1em;
-        height: calc(100vh - 3.5em - 80px - 2em);
+        height: calc(100vh - 3.5em - 80px - 3em);
     }
 
     .st-chat-contact-list-item-img img {

@@ -297,7 +297,7 @@ export const ChatBox = () => {
           </div>
           <div className='d-flex gap-2 align-items-end'>
             <form action="" className='d-flex'>
-              <textarea type="text" placeholder='Type a message' className='st-mes-type-input st-scrollbar-thin' autoFocus onChange={(e) => setTextInput(e.target.value)} ref={textAreaRef} value={textInput} disabled={loadSend} />
+              <textarea type="text" placeholder='Type a message' className='st-mes-type-input st-scrollbar-thin' onChange={(e) => setTextInput(e.target.value)} ref={textAreaRef} value={textInput} disabled={loadSend} />
             </form>
             <button className='st-mes-input-box-btn' onClick={handleSendMessage} disabled={loadSend} ><span><i className="ri-send-plane-2-line"></i></span></button>
           </div>
@@ -498,7 +498,7 @@ const ChatEmojiBox = ({ openState, closeFunc, onEmojiClick }) => {
   }
   return (
     <div className='st-chat-box-emoji-picker-box' ref={emojiBoxRef}>
-      <EmojiPicker theme='dark' emojiStyle='apple' onEmojiClick={emojiClickHandler} />
+      <EmojiPicker theme='dark' emojiStyle='apple' onEmojiClick={emojiClickHandler} autoFocusSearch={false} />
     </div>
   )
 }

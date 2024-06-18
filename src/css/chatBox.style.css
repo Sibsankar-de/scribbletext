@@ -12,6 +12,9 @@
     display: flex;
     align-items: center;
     padding: 0 2em;
+    position: fixed;
+    width: 100%;
+    z-index: 5;
 }
 
 .st-chat-box-contact-det-box{
@@ -46,6 +49,7 @@
     height: calc(100vh - 3em - 7.5em - 4px);
     width: 100%;
     position: relative;
+    margin-top: 4em;
 }
 
 .st-chat-box-message-sec::before {
@@ -314,6 +318,7 @@
     resize: none;
     height: 2.2em;
     max-height: 8em;
+    overflow-x: hidden;
 }
 
 .st-mes-type-input:focus {

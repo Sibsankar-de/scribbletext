@@ -106,7 +106,7 @@ export const ChatContactBox = () => {
                     <div>
                         <form action="" className='d-grid'>
                             <div className='st-input-search-ico'><i className="ri-search-2-line"></i></div>
-                            <input type="text" className='st-search-input' placeholder='Search a contact' autoFocus onChange={(e) => setSearchInput(e.target.value)} />
+                            <input type="text" className='st-search-input' placeholder='Search a contact' onChange={(e) => setSearchInput(e.target.value)} />
                         </form>
                     </div>
                 </section>
