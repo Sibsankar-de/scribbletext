@@ -55,11 +55,11 @@
 
 .st-chat-box-message-sec::before {
     content: "";
-    position: fixed;
-    background-image: url(http://localhost:3000/static/media/chat-wallpaper.cf9ad27….jpg);
+    position: absolute;
+    background-image: url('../assets//img/chat-wallpaper.jpg');
     background-repeat: no-repeat;
     background-size: cover;
-    height: calc(100vh - 3em - 7.5em - 4px);
+    height: 100%;
     width: 100%;
     opacity: 0.5;
     z-index: -1;
@@ -69,14 +69,16 @@
     height: 100%;
     display: grid;
     align-items: start;
+    height: calc(100vh - 3em - 7.5em - 4px);
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .st-chat-box-message-box {
     display: grid;
     padding: 1em;
-    overflow-y: scroll;
     gap: 0.7em;
-    max-height: calc(100vh - 3em - 7.5em - 4px);
+    max-height: fit-content;
     grid-template-rows: max-content;
     position: relative;
 }
@@ -84,11 +86,15 @@
 .st-sender-bubble-box {
     display: grid;
     justify-self: end;
+    width: fit-content;
+    height: fit-content;
 }
 
 .st-receiver-bubble-box {
     display: grid;
     justify-self: start;
+    width: fit-content;
+    height: fit-content;
 }
 
 .st-sender-bubble-box::after {

@@ -22,6 +22,28 @@ const toastOptions = {
 }
 
 export const ChatBox = () => {
+  const textAreaRef = useRef(null);
+  const chatBoxRef = useRef(null)
+  useEffect(() => {
+    const handleFocus = () => {
+      if (chatBoxRef.current) {
+        chatBoxRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    };
+
+    const textArea = textAreaRef.current;
+    if (textArea) {
+      textArea.addEventListener('focus', handleFocus);
+    }
+
+    return () => {
+      if (textArea) {
+        textArea.removeEventListener('focus', handleFocus);
+      }
+    };
+  }, []);
+
+
   const navigate = useNavigate()
   const [contextMenuEvent, setContextMenuEvent] = useState(null)
   const [contextMenuActive, setContextMenuActive] = useState(false);
@@ -34,6 +56,8 @@ export const ChatBox = () => {
   }
 
   const contextMenuCloseFnc = () => setContextMenuActive(false);
+
+
 
   const [emojiOpen, setEmojiOpen] = useState(false);
   const emojiBtnClickHandler = e => {
@@ -52,7 +76,7 @@ export const ChatBox = () => {
   // Input handlers
   const [textInput, setTextInput] = useState('')
   // increase textarea height
-  const textAreaRef = useRef(null);
+
   useEffect(() => {
     const textarea = textAreaRef.current
     textarea.style.height = `2.2em`
@@ -230,7 +254,7 @@ export const ChatBox = () => {
 
   // Handle Message scroll
   useEffect(() => {
-    const element = document.getElementsByClassName('st-chat-box-message-box')
+    const element = document.getElementsByClassName('st-chat-box-message-box-container')
 
     if (element) {
       element[0].scrollTop = element[0].scrollHeight
@@ -261,13 +285,13 @@ export const ChatBox = () => {
       </section>
 
       <section className='st-chat-box-message-sec' onContextMenu={handleContextMenu}>
-        <div className='st-chat-box-message-box-container'>
+        <div className='st-chat-box-message-box-container st-scrollbar-thin' ref={chatBoxRef}>
           {chatLoading && <div className="st-chat-load-box">Loading chats...</div>}
           {(!chatLoading && messageList?.length === 0) && <div className='st-empty-chat-sgbox'>
             <div>Start chatting with <span className='text-primary'>@{recipient?.userName}</span></div>
             <div className='st-col-fade st-text-small'>Chats and messages are encrypted and safe</div>
           </div>}
-          <ul className='st-chat-box-message-box st-scrollbar-thin'>
+          <ul className='st-chat-box-message-box' >
             {!chatLoading && messageList?.map((message, index) => {
               const messageFrom = message?.recipientId === recipientId ? 'sender' : 'receiver'
               return <ChatBubble
@@ -363,7 +387,7 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
 
   useEffect(() => {
     socket.on('messageChange', (data) => {
-      if (messageItem?._id === data?._id)
+      if (message?._id === data?._id)
         setMessage(data)
     })
   })

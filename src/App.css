@@ -1,5 +1,5 @@
 body {
-  overflow-x: hidden;
+  overflow: hidden;
   position: relative;
   background-color: var(--st-t-black);
   color: var(--st-nt-white);
