@@ -11,6 +11,8 @@
     display: grid;
     grid-auto-flow: column;
     margin-bottom: 1em;
+    grid-template-columns: max-content;
+    gap: 0.5em;
 }
 
 .st-search-input {
@@ -186,6 +188,12 @@
 
     .st-chat-contact-para {
         max-width: 14vw;
+    }
+}
+
+@media only screen and (min-width: 769px) {
+    .st-contact-box-head-img{
+        display: none;
     }
 }
 

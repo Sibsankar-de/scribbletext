@@ -224,6 +224,7 @@
         overflow-x: hidden;
         position: relative;
         gap: 2em;
+        padding-bottom: 3.5em;
     }
 
     .st-settings-content-box {
@@ -239,6 +240,7 @@
         position: fixed;
         top: 0;
         left: 0;
+        padding-bottom: 3.5em;
     }
 
     .st-profile-update-pup-body {
@@ -258,6 +260,7 @@
         position: fixed;
         top: 0;
         left: 0;
+        padding-bottom: 3.5em;
     }
 
     .st-prof-crop-img-box {
@@ -274,6 +277,7 @@
         left: 0;
         width: 100vw;
         height: 100vh;
+        padding-bottom: 3.5em;
     }
 
     .st-password-change-popup-box .st-popup-body{

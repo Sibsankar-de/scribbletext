@@ -41,6 +41,7 @@ export const SideNav = () => {
                     })
             } catch (error) {
                 // console.error(error);
+                setLoading(false)
             }
         }
 

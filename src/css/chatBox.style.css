@@ -48,7 +48,7 @@
 
 /* ########## */
 .st-chat-box-message-sec {
-    max-height: calc(100vh - 3em - 7.5em - 4px);
+    height: calc(100vh - 3em - 7.5em - 4px);
     width: 100%;
     position: relative;
     margin-top: 4em;
@@ -71,7 +71,7 @@
     height: 100%;
     display: grid;
     align-items: start;
-    height: calc(100vh - 3em - 7.5em - 4px);
+    height: fit-content;
     overflow-y: scroll;
     overflow-x: hidden;
 }
@@ -80,7 +80,7 @@
     display: grid;
     padding: 1em;
     gap: 0.7em;
-    max-height: fit-content;
+    max-height: calc(100vh - 3em - 7.5em - 4px);
     grid-template-rows: max-content;
     position: relative;
 }

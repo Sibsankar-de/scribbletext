@@ -55,6 +55,10 @@ export const LoginPage = () => {
         } else { toast.error("Username and password is required", toastOptions) }
     }
 
+    useEffect(()=>{
+        document.title = 'ScribbleText - Log in'
+    }, [])
+
     return (
         <div className='st-log-box st-fadein-anim'>
             <div className='st-log-box-head text-center'>
@@ -171,6 +175,10 @@ export const RegistrationPage = () => {
             // console.error(error);
         }
     }
+
+    useEffect(()=>{
+        document.title = 'ScribbleText - new registration'
+    }, [])
 
     return (
         <div className='st-log-box  st-fadein-anim'>

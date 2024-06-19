@@ -100,6 +100,7 @@ export const ChatContactBox = () => {
             <div className='st-chat-contact-box'>
                 <section className='st-contact-box-search-sec mb-3'>
                     <div className='st-contact-box-search-sec-p-1'>
+                        <div className='st-contact-box-head-img'><img src={require('../assets/img/logo.png')} alt="" width={25} draggable={false} /></div>
                         <div><h5 className='mb-0'>{window.innerWidth > 768 ? "Chats" : "ScribbleText"}</h5></div>
                         <div className='st-justify-s-end'><button className='st-btn' onClick={() => setAddContOpen(true)}><i className="bi bi-pencil-square"></i></button></div>
                     </div>
