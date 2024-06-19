@@ -464,13 +464,14 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
 
   const handleFileDownload = async () => {
     try {
-      const response = await fetch(getImgDownloadUrl(message?.content?.file?.url));
+      const downloadUrl = getImgDownloadUrl(message?.content?.file?.url)
+      const response = await fetch(downloadUrl, { mode: 'cors' });
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.target = "_blank"
       link.setAttribute('download', message?.content?.file?.original_filename + '-scribble-text');
+      link.target = "_blank"
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
