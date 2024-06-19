@@ -295,6 +295,12 @@
 
     .st-res-set-back{
         position: absolute;
+        overflow-y: scroll;
+        height: fit-content;
+    }
+
+    .st-res-set-back::-webkit-scrollbar{
+        display: none;
     }
 }
 
