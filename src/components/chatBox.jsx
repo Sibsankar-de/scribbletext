@@ -469,6 +469,7 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
+      link.target = "_blank"
       link.setAttribute('download', message?.content?.file?.original_filename + '-scribble-text');
       document.body.appendChild(link);
       link.click();
