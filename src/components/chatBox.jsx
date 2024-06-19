@@ -458,7 +458,7 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
         <div className='st-chat-bubble-content-box'>
           {message?.content?.file && <div className='st-chat-bubble-file-box'>
             <div className='st-chat-bubble-file'>
-              <a download={message?.content?.file?.original_filename + '-scribble-text'} href={getImgDownloadUrl(message?.content?.file?.url)} >
+              <a download={message?.content?.file?.original_filename + '-scribble-text'} href={getImgDownloadUrl(message?.content?.file?.url)} target="_blank" >
                 <div>
                   <button className='st-chat-file-donload-btn'><span><i className='ri-download-2-line'></i></span></button>
                 </div>
