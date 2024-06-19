@@ -464,7 +464,7 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
 
   const handleFileDownload = async () => {
     try {
-      const downloadUrl = getImgDownloadUrl(message?.content?.file?.url)
+      const downloadUrl = message?.content?.file?.url
       const response = await fetch(downloadUrl, { mode: 'cors' });
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
