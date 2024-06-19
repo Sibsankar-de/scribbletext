@@ -211,7 +211,9 @@ export const ChatBox = () => {
             "Content-Type": "multipart/form-data"
           }
         }).then((res) => {
-          fileInput && setMessageList(messageList.filter(e => e !== fileLoadingMessage))
+          if (fileInput) {
+            setMessageList(messageList.filter(e => e['loading'] !== true))
+          }
           setTextInput('')
           setLoadSend(false)
         })
@@ -442,6 +444,8 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
     }
   }, [message])
 
+
+  // File download handler
   const getImgDownloadUrl = (url) => {
     const uploadIndex = url.indexOf('/upload/');
     if (uploadIndex === -1) {
@@ -451,6 +455,16 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
     return downloadUrl;
   };
 
+  const handleFileDownload = () => {
+    const link = document.createElement('a');
+    link.href = getImgDownloadUrl(message?.content?.file?.url);
+    link.target = "_blank"
+    link.setAttribute('download', message?.content?.file?.original_filename + '-scribble-text');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
 
   return (
     (!isChatDeleted) && <div className={`${messageFrom === 'receiver' ? 'st-receiver-bubble-box' : 'st-sender-bubble-box'} ${!chatTail && 'st-hide-chat-tail'}`} >
@@ -458,9 +472,9 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
         <div className='st-chat-bubble-content-box'>
           {message?.content?.file && <div className='st-chat-bubble-file-box'>
             <div className='st-chat-bubble-file'>
-              <a download={message?.content?.file?.original_filename + '-scribble-text'} href={getImgDownloadUrl(message?.content?.file?.url)} target="_blank" >
+              <div className='st-chat-bubble-file-content'>
                 <div>
-                  <button className='st-chat-file-donload-btn'><span><i className='ri-download-2-line'></i></span></button>
+                  <button className='st-chat-file-donload-btn' onClick={handleFileDownload} ><span><i className='ri-download-2-line'></i></span></button>
                 </div>
                 <div className='d-grid'>
                   <div><span className='st-chat-file-name-box'>{message?.content?.file?.original_filename} { }</span></div>
@@ -470,7 +484,7 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
                     <span>{message?.content?.file?.resource_type}/{message?.content?.file?.format}</span>
                   </div>
                 </div>
-              </a>
+              </div>
             </div>
             <div>
               <span></span>

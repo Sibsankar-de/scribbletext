@@ -19,7 +19,7 @@
     flex: 0 0 auto
 }
 
-.st-chat-box-contact-det-box{
+.st-chat-box-contact-det-box {
     display: flex;
     align-items: center;
     gap: 2em;
@@ -184,9 +184,13 @@
     & a {
         text-decoration: none;
         color: inherit;
-        display: flex;
-        gap: 1em;
+
     }
+}
+
+.st-chat-bubble-file-content {
+    display: flex;
+    gap: 1em;
 }
 
 .st-chat-file-donload-btn {
@@ -356,7 +360,7 @@
     align-items: center;
 }
 
-.st-file-upload-file-name{
+.st-file-upload-file-name {
     max-width: 40vw;
     overflow: hidden;
     white-space: nowrap;
@@ -506,12 +510,12 @@
         animation: slideAnim 0.3s 1;
     }
 
-    .st-chat-box-contact-sec{
+    .st-chat-box-contact-sec {
         top: 0;
         left: 0;
     }
 
-    .st-chat-box-contact-det-box{
+    .st-chat-box-contact-det-box {
         gap: 1em;
     }
 
@@ -528,7 +532,7 @@
         padding-bottom: 3.5em;
     }
 
-    .st-chat-box-type-mes-sec{
+    .st-chat-box-type-mes-sec {
         width: 100vw;
     }
 
@@ -536,7 +540,7 @@
         width: calc(100vw - 12.5em - 1rem);
     }
 
-    .st-mes-type-input::placeholder{
+    .st-mes-type-input::placeholder {
         white-space: nowrap;
     }
 
@@ -548,18 +552,18 @@
         min-width: 50vw;
     }
 
-    .st-chat-box-contact-sec{
+    .st-chat-box-contact-sec {
         padding: 0 1em;
     }
 
-    .st-file-upload-file-name{
+    .st-file-upload-file-name {
         max-width: 60vw;
     }
 
 }
 
 @media only screen and (max-width: 575px) {
-    .st-chat-box-contact-det-box{
+    .st-chat-box-contact-det-box {
         gap: 0.4em;
     }
 
@@ -572,7 +576,7 @@
         width: calc(100vw - 10em - 1rem);
     }
 
-    .st-chat-box-type-mes-sec{
+    .st-chat-box-type-mes-sec {
         padding: 0.5em;
     }
 
