@@ -16,6 +16,7 @@
     position: fixed;
     width: 100%;
     z-index: 5;
+    flex: 0 0 auto
 }
 
 .st-chat-box-contact-det-box{
@@ -51,6 +52,7 @@
     width: 100%;
     position: relative;
     margin-top: 4em;
+    flex: 1 1 auto;
 }
 
 .st-chat-box-message-sec::before {
@@ -290,6 +292,7 @@
     bottom: 0;
     z-index: 6;
     width: fit-content;
+    flex: 0 0 auto;
 }
 
 .st-chat-box-type-mes-sec-content {
