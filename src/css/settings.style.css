@@ -224,7 +224,8 @@
         overflow-x: hidden;
         position: relative;
         gap: 2em;
-        padding-bottom: 3.5em;
+        display: flex;
+        flex-direction: column;
     }
 
     .st-settings-content-box {
@@ -298,9 +299,10 @@
     }
 
     .st-res-set-back{
-        position: absolute;
+        height: fit-content !important;
         overflow-y: scroll;
-        height: fit-content;
+        align-items: unset !important;
+        justify-content: unset !important;
     }
 
     .st-res-set-back::-webkit-scrollbar{

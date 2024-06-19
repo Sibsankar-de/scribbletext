@@ -369,7 +369,7 @@ const ChangePasswordPopup = ({ openState, onClose }) => {
     }
 
     return (
-        <PopupWraper openState={openState} className='st-password-change-popup-box' >
+        <PopupWraper openState={openState} className='st-password-change-popup-box' backClass={'st-res-set-back'}>
             <div className="st-popup-head st-falign-prop" >
                 <div className='st-chat-back-btn-box'>
                     <button className="st-chat-back-btn" onClick={() => onClose()} ><i className="ri-arrow-left-line"></i></button>
