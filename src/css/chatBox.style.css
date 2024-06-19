@@ -136,6 +136,7 @@
     display: grid;
     height: fit-content;
     overflow: hidden;
+    user-select: none;
 }
 
 .st-receiver-bubble-box .st-chat-bubble {
