@@ -268,7 +268,7 @@
         max-width: unset !important;
         min-width: unset !important;
         width: 100%;
-        height: calc(100vh - 60px);
+        height: 70vh;
         padding: 0 !important;
     }
 
