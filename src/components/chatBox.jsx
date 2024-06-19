@@ -380,6 +380,14 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
         } catch (error) {
           // console.log(error);
         }
+
+      else if (message?.senderId === message?.recipientId) {
+        try {
+          await axios.post('/message/update-status', postData)
+        } catch (error) {
+          // console.log(error);
+        }
+      }
     }
     if (messageItem?._id) {
       updateMessageStatus()
@@ -394,9 +402,8 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
     })
   })
 
-  // handles chat bubble tail
+  // handles chat bubble preferances
   const [chatTail, setChatTail] = useState(true)
-
   useEffect(() => {
     if (index > 0 && messageList) {
       if (messageList[Number(index) - 1]?.senderId === messageList[Number(index)]?.senderId) {
@@ -455,14 +462,21 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
     return downloadUrl;
   };
 
-  const handleFileDownload = () => {
-    const link = document.createElement('a');
-    link.href = getImgDownloadUrl(message?.content?.file?.url);
-    link.target = "_blank"
-    link.setAttribute('download', message?.content?.file?.original_filename + '-scribble-text');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleFileDownload = async () => {
+    try {
+      const response = await fetch(getImgDownloadUrl(message?.content?.file?.url));
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', message?.content?.file?.original_filename + '-scribble-text');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      // console.error('Download failed:', error);
+    }
   };
 
 
