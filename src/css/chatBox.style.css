@@ -14,7 +14,7 @@
     align-items: center;
     padding: 0 2em;
     position: fixed;
-    width: 100%;
+    width: calc(100vw - 22vw - 3.5em);
     z-index: 5;
     flex: 0 0 auto
 }
@@ -513,6 +513,10 @@
 
     .st-chat-box-contact-det-box{
         gap: 1em;
+    }
+
+    .st-chat-box-contact-sec {
+        width: 100vw;
     }
 
     .st-chat-box-message-sec {
