@@ -300,14 +300,10 @@
 
     .st-res-set-back{
         height: fit-content !important;
-        overflow-y: scroll;
         align-items: unset !important;
         justify-content: unset !important;
     }
 
-    .st-res-set-back::-webkit-scrollbar{
-        display: none;
-    }
 }
 
 @media only screen and (max-width: 350px) {
