@@ -446,7 +446,7 @@ export const PrivacySettings = () => {
     }, [])
     return (
         <div className='st-setting-outlet-box st-scrollbar-thin'>
-            <div>
+            <div className='st-privacy-policy-box'>
                 <div className='mb-4 st-falign-prop'>
                     <div className='st-chat-back-btn-box'>
                         <button className="st-chat-back-btn" onClick={() => navigate(-1)} ><i className="ri-arrow-left-line"></i></button>

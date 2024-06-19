@@ -76,7 +76,7 @@ export const ChatContactBox = () => {
     useEffect(() => {
         let newList = []
         contactList?.some(e => {
-            if (e.userName.toLowerCase().includes(searchInput.toLowerCase())) {
+            if (e.userName.toLowerCase().includes(searchInput.toLowerCase()) || e.fullName.toLowerCase().includes(searchInput.toLowerCase())) {
                 newList.push(e)
             }
         })
@@ -225,7 +225,7 @@ const ContactBoxPopup = ({ openState, onClose, onContactClick }) => {
                         const list = res.data?.data
                         let newList = []
                         list?.some(e => {
-                            if (e.userName.toLowerCase().includes(input.toLowerCase())) {
+                            if (e.userName.toLowerCase().includes(input.toLowerCase()) || e.fullName.toLowerCase().includes(input.toLowerCase())) {
                                 newList.push(e)
                             }
                         })

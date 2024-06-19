@@ -304,6 +304,10 @@
         justify-content: unset !important;
     }
 
+    .st-privacy-policy-box{
+        padding-bottom: 4em;
+    }
+
 }
 
 @media only screen and (max-width: 350px) {
