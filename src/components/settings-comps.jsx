@@ -236,7 +236,7 @@ const EditProfilePopup = ({ openState, onClose, user, onProfileChange }) => {
         }
         catch (error) {
             setLoading(false)
-            toast.error("Unable to update Profile")
+            toast.error("Unable to update Profile", toastOptions)
         }
     }
 

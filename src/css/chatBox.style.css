@@ -72,14 +72,13 @@
     display: grid;
     align-items: start;
     height: fit-content;
-    overflow-y: scroll;
-    overflow-x: hidden;
 }
 
 .st-chat-box-message-box {
     display: grid;
     padding: 1em;
     gap: 0.7em;
+    overflow-y: scroll;
     max-height: calc(100vh - 3em - 7.5em - 4px);
     grid-template-rows: max-content;
     position: relative;

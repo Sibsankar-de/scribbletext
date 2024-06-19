@@ -254,7 +254,7 @@ export const ChatBox = () => {
 
   // Handle Message scroll
   useEffect(() => {
-    const element = document.getElementsByClassName('st-chat-box-message-box-container')
+    const element = document.getElementsByClassName('st-chat-box-message-box')
 
     if (element) {
       element[0].scrollTop = element[0].scrollHeight
@@ -285,13 +285,13 @@ export const ChatBox = () => {
       </section>
 
       <section className='st-chat-box-message-sec' onContextMenu={handleContextMenu}>
-        <div className='st-chat-box-message-box-container st-scrollbar-thin' ref={chatBoxRef}>
+        <div className='st-chat-box-message-box-container' ref={chatBoxRef}>
           {chatLoading && <div className="st-chat-load-box">Loading chats...</div>}
           {(!chatLoading && messageList?.length === 0) && <div className='st-empty-chat-sgbox'>
             <div>Start chatting with <span className='text-primary'>@{recipient?.userName}</span></div>
             <div className='st-col-fade st-text-small'>Chats and messages are encrypted and safe</div>
           </div>}
-          <ul className='st-chat-box-message-box' >
+          <ul className='st-chat-box-message-box  st-scrollbar-thin' >
             {!chatLoading && messageList?.map((message, index) => {
               const messageFrom = message?.recipientId === recipientId ? 'sender' : 'receiver'
               return <ChatBubble
