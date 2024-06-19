@@ -525,6 +525,7 @@
 
     .st-chat-box-message-box {
         max-height: calc(100vh - 7.5em - 4px);
+        padding-bottom: 3.5em;
     }
 
     .st-chat-box-type-mes-sec{
