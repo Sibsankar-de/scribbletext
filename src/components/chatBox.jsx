@@ -454,6 +454,9 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
 
   // File download handler
   const getImgDownloadUrl = (url) => {
+    if (url.startsWith('http://')) {
+      url = url.replace('http://', 'https://');
+    }
     const uploadIndex = url.indexOf('/upload/');
     if (uploadIndex === -1) {
       return url;
@@ -464,7 +467,7 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
 
   const handleFileDownload = async () => {
     try {
-      const downloadUrl = getImgDownloadUrl(message?.content?.file?.url)
+      const downloadUrl = getImgDownloadUrl(message?.content?.file?.url, { mode: 'cors' })
       const response = await fetch(downloadUrl);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
