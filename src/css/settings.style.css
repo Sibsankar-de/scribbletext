@@ -292,6 +292,10 @@
             color: #46a9db;
         }
     }
+
+    .st-res-set-back{
+        position: absolute;
+    }
 }
 
 @media only screen and (max-width: 350px) {

@@ -243,7 +243,7 @@ const EditProfilePopup = ({ openState, onClose, user, onProfileChange }) => {
 
     return (
         <>
-            <PopupWraper openState={openState} className='st-edit-prof-popup-box' >
+            <PopupWraper openState={openState} className='st-edit-prof-popup-box' backClass={'st-res-set-back'} >
                 <div className="st-popup-head st-falign-prop">
                     <div className='st-chat-back-btn-box'>
                         <button className="st-chat-back-btn" onClick={() => onClose()} ><i className="ri-arrow-left-line"></i></button>
@@ -318,7 +318,7 @@ const CropImagePopup = ({ openState, imgSrc, onClose, onCrop }) => {
     }, [croppedImgFile])
 
     return (
-        <PopupWraper openState={openState} className='st-crop-profile-img-popup' >
+        <PopupWraper openState={openState} className='st-crop-profile-img-popup' backClass={'st-res-set-back'} >
             <div className="st-popup-body st-prof-crop-img-box">
                 <ImageCropper
                     imageSrc={imgSrc}
