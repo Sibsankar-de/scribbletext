@@ -47,6 +47,7 @@
 .st-chat-contact-list {
     overflow-y: scroll;
     height: calc(100vh - 3.5em - 80px - 3em);
+    position: relative;
 }
 
 .st-chat-contact-list-item {
@@ -107,6 +108,7 @@
 .st-chat-contact-context-menu {
     transform-origin: top right !important;
     justify-self: end;
+    position: absolute !important;
 }
 
 /* ############## */
