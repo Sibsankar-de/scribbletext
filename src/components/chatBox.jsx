@@ -211,9 +211,7 @@ export const ChatBox = () => {
             "Content-Type": "multipart/form-data"
           }
         }).then((res) => {
-          if (fileInput) {
-            setMessageList(messageList.filter(e => e['loading'] !== true))
-          }
+          setMessageList(messageList.filter(e => e['loading'] !== true))
           setTextInput('')
           setLoadSend(false)
         })
