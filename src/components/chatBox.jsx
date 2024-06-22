@@ -372,7 +372,7 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
         receiveStatus: 'seen',
         messageId: messageItem?._id
       }
-      if (message?.senderId !== currentUser?._id)
+      if (message?.recipientId === currentUser?._id)
         try {
           await axios.post('/message/update-status', postData)
         } catch (error) {

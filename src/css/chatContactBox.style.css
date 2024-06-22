@@ -48,6 +48,7 @@
     overflow-y: scroll;
     height: calc(100vh - 3.5em - 80px - 3em);
     position: relative;
+    padding-bottom: 3em;
 }
 
 .st-chat-contact-list-item {
