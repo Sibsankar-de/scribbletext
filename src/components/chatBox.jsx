@@ -391,7 +391,7 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
       updateMessageStatus()
     }
 
-  }, [messageItem])
+  }, [message])
 
   useEffect(() => {
     socket.on('messageChange', (data) => {
