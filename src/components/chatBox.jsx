@@ -8,6 +8,7 @@ import { socket } from '../server/socket.io';
 import { toast, ToastContainer } from 'react-toastify';
 import Compressor from 'compressorjs';
 import { getContextBoxPosition } from '../utils/context-position';
+import PropTypes from 'prop-types';
 
 
 const toastOptions = {
@@ -146,6 +147,7 @@ export const ChatBox = () => {
 
 
   const [messageList, setMessageList] = useState([])
+  const [initMessageList, setInitMessageList] = useState([])
   const [chatLoading, setChatLoading] = useState(false)
   const [recipientChat, setRecipientChat] = useState(null)
   useEffect(() => {
@@ -155,6 +157,7 @@ export const ChatBox = () => {
         await axios.get(`message/g-croom/${recipientId}`)
           .then((res) => {
             setMessageList(res.data?.data?.messages || [])
+            setInitMessageList(res.data?.data?.messages || [])
             setChatLoading(false)
           })
       } catch (error) {
@@ -225,9 +228,13 @@ export const ChatBox = () => {
 
   // Handle database changes
   useEffect(() => {
-    socket.on('messageChange', (data) => {
-      setRecipientChat(data)
-    })
+    try {
+      socket.on('messageChange', (data) => {
+        setRecipientChat(data)
+      })
+    } catch (error) {
+      console.log(error);
+    }
   })
 
   useEffect(() => {
@@ -251,6 +258,7 @@ export const ChatBox = () => {
       }
     }
   }, [recipientChat])
+
 
   // Handle Message scroll
   useEffect(() => {
@@ -292,17 +300,23 @@ export const ChatBox = () => {
             <div className='st-col-fade st-text-small'>Chats and messages are encrypted and safe</div>
           </div>}
           <ul className='st-chat-box-message-box  st-scrollbar-thin' >
-            {!chatLoading && messageList?.map((message, index) => {
-              const messageFrom = message?.recipientId === recipientId ? 'sender' : 'receiver'
-              return <ChatBubble
-                messageFrom={messageFrom}
-                key={index}
-                messageItem={message}
-                messageList={messageList}
-                index={index}
-                currentUser={currentUser}
-              />
-            })}
+            {!chatLoading &&
+              messageList?.map((message, index) => {
+                const messageFrom = message?.recipientId === recipientId ? 'sender' : 'receiver'
+                return (
+                  <React.Fragment key={index}>
+                    <ChatFlag currentUser={currentUser} index={index} key={'flag' + index} messageList={messageList} unCheckList={initMessageList} />
+                    <ChatBubble
+                      messageFrom={messageFrom}
+                      key={"chat" + index}
+                      messageItem={message}
+                      messageList={messageList}
+                      index={index}
+                      currentUser={currentUser}
+                    />
+                  </React.Fragment>
+                )
+              })}
           </ul>
         </div>
       </section>
@@ -352,7 +366,7 @@ export const ChatBox = () => {
   )
 }
 
-const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser }) => {
+const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser, onMessageChange }) => {
   const [contextMenuEvent, setContextMenuEvent] = useState(null);
   const [contextMenuActive, setContextMenuActive] = useState(false);
 
@@ -364,50 +378,58 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
   }
 
   // const handle message
-  const [message, setMessage] = useState(messageItem)
+  const [message, setMessage] = useState(null)
+  useEffect(() => {
+    setMessage(messageItem)
+  }, [messageItem])
 
   useEffect(() => {
     const updateMessageStatus = async () => {
       const postData = {
         receiveStatus: 'seen',
-        messageId: messageItem?._id
+        messageId: message?._id
       }
       if (message?.recipientId === currentUser?._id)
         try {
           await axios.post('/message/update-status', postData)
         } catch (error) {
-          // console.log(error);
+          console.log(error);
         }
-
-      else if (message?.senderId === message?.recipientId) {
-        try {
-          await axios.post('/message/update-status', postData)
-        } catch (error) {
-          // console.log(error);
-        }
-      }
     }
-    if (messageItem?._id) {
+    if (message?._id) {
       updateMessageStatus()
     }
 
   }, [message])
 
   useEffect(() => {
-    socket.on('messageChange', (data) => {
-      if (message?._id === data?._id)
-        setMessage(data)
-    })
+
+    try {
+      socket.on('messageChange', (data) => {
+        if (message?._id === data?._id) {
+          setMessage(data)
+        }
+      })
+    } catch (error) {
+    }
   })
+
+
 
   // handles chat bubble preferances
   const [chatTail, setChatTail] = useState(true)
   useEffect(() => {
     if (index > 0 && messageList) {
-      if (messageList[Number(index) - 1]?.senderId === messageList[Number(index)]?.senderId) {
-        setChatTail(false)
-      }
-      else if (messageList[Number(index) - 1]?.recipientId === messageList[Number(index)]?.recipientId) {
+      const ind0 = messageList[Number(index) - 1]
+      const ind1 = messageList[Number(index)]
+      if (
+        (ind0?.senderId === ind1?.senderId || ind0?.recipientId === ind1?.recipientId)
+        && getDateData(ind0?.createdAt)?.dateString === getDateData(ind1?.createdAt)?.dateString
+        && (
+          (!ind0?.deletedFromSender && currentUser?._id === ind0?.senderId)
+          || (!ind0?.deletedFromRecipient && currentUser?._id === ind0?.recipientId)
+        )
+      ) {
         setChatTail(false)
       }
       else {
@@ -425,13 +447,14 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
     });
   }
 
-  const chatCreateTime = new Date(message?.createdAt)?.toString();
   const [messageTime, setMessageTime] = useState(null)
   useEffect(() => {
-    const regex = /(\d{2}:\d{2})/;
-    const match = chatCreateTime?.match(regex);
-    if (match) {
-      setMessageTime(match[0])
+    if (message) {
+      const match = getDateData(message.createdAt);
+      const timeStr = match.hours + ':' + match.minutes
+      if (match) {
+        setMessageTime(timeStr)
+      }
     }
   }, [message])
 
@@ -482,6 +505,14 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
     }
   };
 
+  // Handle Message scroll
+  useEffect(() => {
+    const element = document.getElementsByClassName('st-chat-box-message-box')
+
+    if (element) {
+      element[0].scrollTop = element[0].scrollHeight
+    }
+  }, [message])
 
   return (
     (!isChatDeleted) && <div className={`${messageFrom === 'receiver' ? 'st-receiver-bubble-box' : 'st-sender-bubble-box'} ${!chatTail && 'st-hide-chat-tail'}`} >
@@ -532,6 +563,82 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser 
         </>
       </div>
       {contextMenuActive && <ChatBubbleContextMenu event={contextMenuEvent} activeState={contextMenuActive} closeFunc={() => setContextMenuActive(false)} messageFrom={messageFrom} messageId={message?._id} text={message?.content?.text} />}
+    </div>
+  )
+}
+
+const ChatFlag = ({ index, messageList, currentUser, unCheckList }) => {
+  const [showFlag, setShowFlag] = useState(false);
+  const [dateFlag, setDateFlag] = useState('')
+  const [showUnreadFlag, setShowUnreadFlag] = useState(false)
+
+  // Implementing date flags
+  useEffect(() => {
+
+
+    if (messageList) {
+
+      const currentMessageDate = getDateData(messageList[index]?.createdAt);
+      const today = getDateData(Date.now());
+
+      if (index !== 0) {
+        if (getDateData(messageList[index - 1]?.createdAt)?.dateString === currentMessageDate?.dateString) {
+          setShowFlag(false)
+        }
+        else {
+          setShowFlag(true);
+          setDateFlag(currentMessageDate?.dateString)
+        }
+      }
+      else {
+        setShowFlag(true)
+        setDateFlag(currentMessageDate?.dateString)
+      }
+
+      if (currentMessageDate?.dateString === today.dateString) {
+        setDateFlag('Today')
+      }
+      else if (currentMessageDate?.year === today.year && currentMessageDate?.month === today.month && (today.day - currentMessageDate?.day === 1 || today.day < currentMessageDate?.day)) {
+        setDateFlag('Yesterday')
+      }
+
+
+    }
+
+  }, [messageList])
+
+  // implementing Unread messages flag
+  useEffect(() => {
+    if (unCheckList) {
+
+      if (index !== 0) {
+        if (unCheckList[index - 1]?.receiveStatus === 'un received' && unCheckList[index]?.receiveStatus === 'un received') {
+          setShowUnreadFlag(false)
+        }
+        else if (unCheckList[index - 1]?.receiveStatus !== 'un received' && unCheckList[index]?.receiveStatus === 'un received' && unCheckList[index].recipientId === currentUser?._id) {
+          setShowFlag(true)
+          setShowUnreadFlag(true)
+        }
+        else {
+          setShowUnreadFlag(false)
+        }
+      }
+      else {
+        if (unCheckList[index]?.receiveStatus === 'un received') setShowUnreadFlag(true)
+        else { setShowUnreadFlag(false) }
+      }
+    }
+  })
+
+
+  return (
+    showFlag && <div className='st-chat-flag-box'>
+      {showUnreadFlag && <div className='st-unread-flag'>
+        <div className='st-unread-flag-para'><span>Unread messages</span></div>
+      </div>}
+      {dateFlag && <div className='st-flag-para st-col-fade'>
+        <span> {dateFlag}</span>
+      </div>}
     </div>
   )
 }
@@ -696,9 +803,16 @@ const ChatBubbleContextMenu = ({ event, activeState, closeFunc, messageFrom, mes
       }
     }
 
+    const element = document.getElementsByClassName('st-chat-box-message-box')
+    if (element) {
+      element[0].addEventListener('scroll', () => closeFunc())
+    }
     document.addEventListener('click', handleClose)
     document.addEventListener('contextmenu', handleClose)
-    return () => document.removeEventListener('click', handleClose)
+    return () => {
+      document.removeEventListener('click', handleClose)
+      document.removeEventListener('contextmenu', handleClose)
+    }
   }, [])
 
   const [deletePopup, setDeletePopup] = useState({ type: 'only', active: false })
@@ -769,6 +883,25 @@ const DeleteConfirmPopup = ({ openState, deleteType, popupRef, onClose, messageI
   )
 }
 
+// Geting date data from ISO string
+export const getDateData = (date) => {
+  const dateStr = new Date(date).toString()
+  const regex = /(\w{3}) (\w{3}) (\d{2}) (\d{4}) (\d{2}):(\d{2}):\d{2}/;
+  const match = dateStr.match(regex);
+  if (match) {
+    const year = match[4]
+    const month = match[2];
+    const day = match[3];
+    const hours = match[5];
+    const minutes = match[6];
+    const dateString = `${day} ${month} ${year}`
+    const timeString = `${hours}:${minutes}`
+
+    return ({ year, month, day, dateString, hours, minutes, timeString })
+  }
+}
+
+// convert file size string to 'MB' 'KB' 'GB'
 const fileSizeConverter = (fileSize) => {
   let kbSize;
   let mbSize;

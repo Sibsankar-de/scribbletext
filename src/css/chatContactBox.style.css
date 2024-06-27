@@ -48,7 +48,7 @@
     overflow-y: scroll;
     height: calc(100vh - 3.5em - 80px - 3em);
     position: relative;
-    padding-bottom: 3em;
+    padding-bottom: 4em;
 }
 
 .st-chat-contact-list-item {
@@ -82,6 +82,15 @@
     border-radius: 50%;
 }
 
+.st-contact-username-box {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    width: 100%;
+    gap: 0.4em;
+    grid-template-columns: minmax(0, auto) 1fr;
+}
+
 .st-contact-username {
     font-size: 1.1em;
     font-weight: bold;
@@ -91,19 +100,38 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    max-width: 14vw;
+}
+
+.st-chat-cont-item-time-para {
+    justify-self: end;
+    font-size: 0.8em;
+    color: #23991c;
+    transition: 0.2s;
+}
+
+.st-chat-cont-lt-message-box {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: minmax(0, auto) 1fr;
+    align-items: center;
+    gap: 0.2em;
 }
 
 .st-contact-unseen-mes-counter {
-    background-color: #21992f;
-    width: fit-content;
-    height: fit-content;
+    background-color: #23991c;
+    height: 1.6em;
+    min-width: 1.65em;
+    max-width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 0.1em 0.4em;
     align-self: center;
     justify-self: end;
     position: absolute;
     border-radius: 20px;
     font-size: 0.75em;
+    margin-top: 1em;
 }
 
 .st-chat-contact-context-menu {
@@ -178,24 +206,16 @@
     .st-chat-contact-list-item-img img {
         width: 50px;
     }
-
-    .st-chat-contact-para {
-        max-width: 17vw;
-    }
 }
 
 @media only screen and (max-width: 1000px) {
     .st-chat-contact-box {
         width: 16em;
     }
-
-    .st-chat-contact-para {
-        max-width: 14vw;
-    }
 }
 
 @media only screen and (min-width: 769px) {
-    .st-contact-box-head-img{
+    .st-contact-box-head-img {
         display: none;
     }
 }
@@ -244,12 +264,13 @@
         min-width: 100vw !important;
     }
 
-    .st-contact-popup-btm {
-        display: none !important;
+    .st-popup-contact-box-item-list {
+        max-height: calc(100vh - 50px - 100px);
+        padding-bottom: 4em;
     }
 
-    .st-chat-contact-para {
-        max-width: 60vw;
+    .st-contact-popup-btm {
+        display: none !important;
     }
 }
 
@@ -272,10 +293,6 @@
 
     .st-chat-contact-list-item-img img {
         width: 60px;
-    }
-
-    .st-chat-contact-para {
-        max-width: 70vw;
     }
 }
 

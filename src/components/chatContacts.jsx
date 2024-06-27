@@ -6,6 +6,7 @@ import axios from '../server/axios-setup'
 import { toast, ToastContainer } from 'react-toastify'
 import { Spinner } from '../utils/loader-spinner'
 import { socket } from '../server/socket.io'
+import { getDateData } from './chatBox'
 
 const toastOptions = {
     autoClose: 5000,
@@ -144,7 +145,8 @@ const ContactListItem = ({ contact, currentUser }) => {
         setContMenuActive(true);
     }
 
-
+    const lastMessage = contact?.lastMessage
+    const lastMessageTime = getDateData(lastMessage?.createdAt)?.timeString
     return (
         <li className='st-chat-contact-list-item' onContextMenu={handleContextMenu}>
             <Link to={`/home/chats/${contact?.recipientId}`}>
@@ -153,10 +155,22 @@ const ContactListItem = ({ contact, currentUser }) => {
                         <img src={contact?.avatar || require('../assets/img/profile-img.png')} alt="" draggable={false} />
                     </div>
                     <div>
-                        <div className='d-flex gap-1'><div className='st-contact-username st-chat-contact-para'>{contact?.fullName}</div>
+                        <div className='st-contact-username-box'>
+                            <div className='st-contact-username st-chat-contact-para'>{contact?.fullName}</div>
                             {currentUser?._id === contact?._id && <div className='st-text-small'> (you)</div>}
+                            <div className={`st-chat-cont-item-time-para ${contact?.unseenMessagesCount === 0 && 'st-col-fade'}`}>{lastMessageTime}</div>
                         </div>
-                        <div className={`st-chat-contact-para ${contact?.unseenMessagesCount === 0 && 'st-col-fade'}`}>{contact?.lastMessage}</div>
+                        <div className={`st-chat-cont-lt-message-box ${contact?.unseenMessagesCount === 0 && 'st-col-fade'}`}>
+                            {lastMessage?.senderId === currentUser?._id &&
+                                <span>
+                                    {lastMessage?.receiveStatus === 'seen' && <i className="ri-check-double-line st-col-lblue"></i>}
+                                    {lastMessage?.receiveStatus === 'received' && <i className="ri-check-double-line st-col-fade"></i>}
+                                    {lastMessage?.receiveStatus === 'un received' && <i className="ri-check-line st-col-fade"></i>}
+                                    {lastMessage?.receiveStatus === 'sending' && <i className="ri-time-line st-col-fade"></i>}
+                                </span>}
+                            <span className='st-chat-contact-para'>{lastMessage?.content?.text || lastMessage?.content?.file?.original_filename}</span>
+
+                        </div>
                     </div>
                     {contact?.unseenMessagesCount > 0 && <div className='st-contact-unseen-mes-counter st-fadein-anim'>{contact?.unseenMessagesCount}</div>}
                 </div>
@@ -175,7 +189,10 @@ const ContextMenu = ({ activeState, closeFunc, userId }) => {
                 closeFunc()
             }
         }
-
+        const box = document.getElementsByClassName('st-chat-contact-list')
+        if (box) {
+            box[0].addEventListener('scroll', () => closeFunc())
+        }
         document.addEventListener('click', handleClose)
         document.addEventListener('contextmenu', handleClose)
         return () => {

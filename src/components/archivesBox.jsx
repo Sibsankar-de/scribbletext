@@ -42,7 +42,7 @@ export const ArchivesBox = () => {
             })
 
         } catch (error) {
-            
+
         }
     })
 
@@ -108,6 +108,11 @@ const ContextMenu = ({ activeState, closeFunc, userId }) => {
             }
         }
 
+        const box = document.getElementsByClassName('st-chat-contact-list')
+        if (box) {
+            box[0].addEventListener('scroll', () => closeFunc())
+        }
+
         document.addEventListener('click', handleClose)
         document.addEventListener('contextmenu', handleClose)
         return () => {
@@ -128,7 +133,7 @@ const ContextMenu = ({ activeState, closeFunc, userId }) => {
                 })
         } catch (error) {
             toast.error("Unable to remove now", toastOptions)
-            
+
         }
     }
     return (
