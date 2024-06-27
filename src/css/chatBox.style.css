@@ -108,7 +108,7 @@
     height: 0;
     display: block;
     position: absolute;
-    transform: translateX(10px);
+    transform: translateX(8px);
     justify-self: end;
 }
 
@@ -121,7 +121,7 @@
     height: 0;
     display: block;
     position: absolute;
-    transform: translateX(-10px);
+    transform: translateX(-8px);
     justify-self: start;
 }
 
