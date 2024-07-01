@@ -451,7 +451,7 @@ const ChatBubble = ({ messageFrom, messageItem, messageList, index, currentUser,
   useEffect(() => {
     if (message) {
       const match = getDateData(message.createdAt);
-      const timeStr = match.hours + ':' + match.minutes
+      const timeStr = match?.hours + ':' + match?.minutes
       if (match) {
         setMessageTime(timeStr)
       }
