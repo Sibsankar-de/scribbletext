@@ -1,10 +1,24 @@
+.st-content-container {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: auto 1fr;
+    gap: 2px;
+    width: calc(100vw - 4em);
+    height: calc(100vh - 3em);
+    position: relative;
+}
+
 .st-chat-contact-box {
     padding: 1em;
+    padding-bottom: 0;
     background-color: var(--st-b-black);
     width: 22vw;
     color: var(--st-nt-white);
     border-radius: 10px 0 0 0;
-    margin-right: 2px;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 1em;
+    height: calc(100vh - 3em);
 }
 
 .st-contact-box-search-sec-p-1 {
@@ -46,7 +60,7 @@
 
 .st-chat-contact-list {
     overflow-y: scroll;
-    height: calc(100vh - 3.5em - 80px - 3em);
+    height: 100%;
     position: relative;
     padding-bottom: 4em;
 }
@@ -70,6 +84,14 @@
     background-color: #3b3b3bbe;
 }
 
+.st-chat-contact-list-item:active {
+    filter: brightness(0.9);
+}
+
+.st-chat-contact-list-item-active {
+    background-color: #3b3b3bbe;
+}
+
 .st-chat-c-list-item-content {
     display: grid;
     grid-auto-flow: column;
@@ -77,9 +99,24 @@
     gap: 1em;
 }
 
+.st-chat-contact-list-item-img{
+    display: grid;
+}
+
 .st-chat-contact-list-item-img img {
     width: 60px;
     border-radius: 50%;
+}
+
+.st-online-flag{
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: var(--st-t-green);
+    border-radius: 50%;
+    justify-self: end;
+    align-self: flex-end;
+    border: 2px solid var(--st-b-black);
 }
 
 .st-contact-username-box {
@@ -140,6 +177,22 @@
     position: absolute !important;
 }
 
+.st-chat-contact-context-menu ul li button{
+    background-color: transparent;
+    border: none;
+    color: inherit;
+    width: 100%;
+    outline: none;
+    padding: 0.5em 1em;
+    display: flex;
+    gap: 0.5em;
+    transition: 0.2s;
+}
+
+.st-chat-contact-context-menu ul li button:hover{
+    background-color: #3b3b3b;
+}
+
 /* ############## */
 .st-popup-contact-box-item-list {
     padding: 0.6em;
@@ -172,26 +225,6 @@
 .st-popup-contact-box-item .st-chat-contact-para {
     font-size: 1em;
     font-weight: bold;
-}
-
-.st-contactlist-loading-box {
-    width: 100%;
-    height: 4em;
-    background: #3f3f3f;
-    border-radius: 10px;
-    animation: beepAnim 1s infinite;
-}
-
-@keyframes beepAnim {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    40% {
-        opacity: 0.5;
-    }
 }
 
 

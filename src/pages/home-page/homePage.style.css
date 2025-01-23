@@ -1,0 +1,21 @@
+/* ***Home Page Css*** */
+.st-chat-home-box {
+    width: calc(100vw - 3.5em - 2px - 22vw);
+    text-align: center;
+    height: calc(100vh - 3em);
+    background-color: var(--st-b-black);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/***** Responsive CSS *****/
+@media only screen and (max-width: 768px) {
+    .st-chat-home-box {
+        display: none;
+    }
+
+}
+
+/***** End Responsive CSS *****/

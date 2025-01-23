@@ -20,18 +20,19 @@
 .st-side-nav {
     height: calc(100vh - 3em);
     background-color: var(--st-t-black);
-    width: 3.5em;
-    padding: 1em 0.2em;
-    padding-right: 0.4em;
+    width: 4em;
+    padding: 1em 0;
     display: grid;
 }
 
 .st-ns-1 {
     align-self: start;
+    justify-self: center;
 }
 
 .st-ns-2 {
     align-self: end;
+    justify-self: center;
 }
 
 .st-s-nav-sec ul li {

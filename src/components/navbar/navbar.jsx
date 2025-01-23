@@ -1,9 +1,10 @@
-import axios from '../server/axios-setup'
 import React, { useEffect, useState } from 'react'
+import "./navbar.style.css"
+import axios from '../../server/axios-setup'
 import { NavLink } from 'react-router-dom'
-import { Spinner } from '../utils/loader-spinner'
-import { PopupWraper } from '../utils/popup-box'
-import { socket } from '../server/socket.io'
+import { Spinner } from '../../utils/loader-spinner'
+import { PopupWraper } from '../popup-box/popup-box'
+import { socket } from '../../server/socket.io'
 
 export const HeaderNav = () => {
     const [online, setOnline] = useState(false)
@@ -12,7 +13,7 @@ export const HeaderNav = () => {
     })
     return (
         <nav className='st-header-nav'>
-            <div><img src={require('../assets/img/logo.png')} alt="" width={30} draggable={false} /></div>
+            <div><img src={require('../../assets/img/logo.png')} alt="" width={30} draggable={false} /></div>
             <div className='fw-bold mx-2'>ScribbleText</div>
             {!online && <div className='mx-4'>
                 <span><i className="ri-wifi-off-line mx-2"></i></span>
@@ -97,37 +98,12 @@ export const SideNav = () => {
                             </div>
                         </NavLink></li>
                         <li title='profile'>
-                            <div className='st-nav-prof-img'><img src={userData?.avatar ? userData?.avatar : require('../assets/img/profile-img.png')} alt="" draggable={false} /></div>
+                            <div className='st-nav-prof-img'><img src={userData?.avatar ? userData?.avatar : require('../../assets/img/profile-img.png')} alt="" draggable={false} /></div>
                         </li>
                     </ul>
                 </div>
             </section>
-            <LoadingPage openState={loading} />
         </nav>
-    )
-}
-
-const LoadingPage = ({ openState }) => {
-    const [open, setOpen] = useState(false)
-    const [closeAnim, setCloseAnim] = useState(false)
-
-    useEffect(() => {
-        if (!openState) {
-            setTimeout(()=>{
-                setCloseAnim(true)
-            }, 2000)
-            setTimeout(() => {
-                setOpen(false)
-                setCloseAnim(false)
-            }, 2100)
-        } else {
-            setOpen(true)
-        }
-    }, [openState])
-    return (
-        open && <div className={`st-f-page-loading-box ${closeAnim && 'st-fadeout-anim'}`}>
-            <div className='st-fadein-anim'><img src={require('../assets/img/logo.png')} alt="" width={100} draggable={false} /></div>
-        </div>
     )
 }
 
@@ -197,13 +173,12 @@ export const BottomNav = () => {
                         </li>
                         <li title='Settings'>
                             <NavLink to="/settings">
-                                <div className='st-nav-prof-img'><img src={userData?.avatar || require('../assets/img/profile-img.png')} alt="" draggable={false} /></div>
+                                <div className='st-nav-prof-img'><img src={userData?.avatar || require('../../assets/img/profile-img.png')} alt="" draggable={false} /></div>
                             </NavLink>
                         </li>
                     </ul>
                 </div>
             </section>
-            <LoadingPage openState={loading} />
         </nav>
     )
 }

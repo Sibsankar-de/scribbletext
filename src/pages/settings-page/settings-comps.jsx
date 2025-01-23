@@ -1,42 +1,20 @@
-import axios from '../server/axios-setup.js'
 import React from 'react'
+import "./settings.style.css"
+import axios from '../../server/axios-setup.js'
 import { useEffect } from 'react'
 import { useRef } from 'react'
 import { useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
-import ImageCropper from '../utils/image-cropper'
-import { PopupWraper } from '../utils/popup-box'
+import ImageCropper from '../../utils/image-cropper'
+import { PopupWraper } from '../../components/popup-box/popup-box.jsx'
 import Cookies from "js-cookie"
 import { toast, ToastContainer } from "react-toastify"
-import { Spinner } from '../utils/loader-spinner.jsx'
+import { Spinner } from '../../utils/loader-spinner.jsx'
 import Compressor from 'compressorjs'
-
-const toastOptions = {
-    autoClose: 5000,
-    position: 'top-center',
-    hideProgressBar: true,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-}
+import { useCurrentUser } from '../../hooks/get-currentuser.js'
 
 export const Settings = () => {
-    const [user, setUser] = useState(null)
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                await axios.get('/users/current-user')
-                    .then((res) => {
-                        setUser(res.data?.data)
-                    })
-            } catch (error) {
-                // console.error(error);
-            }
-        }
-        fetchUser()
-    }, [])
+    const user = useCurrentUser();
     return (
         <div className='st-settings-content-box'>
             <section className='st-settings-nav-sec'>
@@ -45,7 +23,7 @@ export const Settings = () => {
                         <NavLink to='profile' className='st-settings-nav-link'>
                             <div className='st-settings-nav-opt-active-bar'></div>
                             <div className='d-flex align-items-center gap-3'>
-                                <span><img src={user?.avatar || require('../assets/img/profile-img.png')} alt="" /></span>
+                                <span><img src={user?.avatar || require('../../assets/img/profile-img.png')} alt="" /></span>
                                 <span>Profile</span>
                             </div>
 
@@ -65,7 +43,6 @@ export const Settings = () => {
             <section>
                 <Outlet />
             </section>
-            <ToastContainer />
         </div>
     )
 }
@@ -95,6 +72,38 @@ export const ProfileSettings = () => {
         document.title = user?.userName ? `ScribbleText - ${user?.userName}` : 'loading...'
     }, [user])
 
+    // check notification permission
+    const [isNotificationAllowed, setIsNotificationAllowed] = useState(false);
+    useEffect(() => {
+        const checkNotificationPermission = async () => {
+            try {
+                if (Notification.permission === 'granted') {
+                    setIsNotificationAllowed(true)
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        checkNotificationPermission()
+    }, [])
+
+    // take notification permission
+    const takeNotificationPermission = async () => {
+        try {
+            if (Notification.permission === 'default') {
+                await Notification.requestPermission();
+                if (Notification.permission === 'granted') {
+                    setIsNotificationAllowed(true)
+                }
+            }
+            if (Notification.permission === 'denied') {
+                toast.warn("Notification permission denied! Please go to browser settings and allow notification.")
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     return (
         <div className='st-setting-outlet-box st-scrollbar-thin'>
             <section className='mb-4'>
@@ -105,7 +114,7 @@ export const ProfileSettings = () => {
             </section>
             <section className='st-setttings-user-details-sec'>
                 <div className='st-settings-profile-img-box'>
-                    <img src={user?.avatar || require('../assets/img/profile-img.png')} alt="" draggable={false} />
+                    <img src={user?.avatar || require('../../assets/img/profile-img.png')} alt="" draggable={false} />
                     <div className='st-settings-prof-img-edit-btn' title='Change' onClick={() => setEditProfile(true)} ><span><i className="ri-pencil-line"></i></span></div>
                 </div>
                 <div>
@@ -116,15 +125,18 @@ export const ProfileSettings = () => {
             </section>
             <section>
                 <div>
-                    <button className='st-prof-action-btn' onClick={() => setEditProfile(true)}><span><i className='ri-pencil-fill'></i></span><span>Edit profile</span></button>
+                    <button className='st-btn' onClick={() => setEditProfile(true)}><span><i className='ri-pencil-fill'></i></span><span>Edit profile</span></button>
                 </div>
+                {!isNotificationAllowed && <div className='mt-3'>
+                    <button className='st-btn' onClick={takeNotificationPermission}><span><i className="ri-notification-line"></i></span><span>Allow notification</span></button>
+                </div>}
                 <div className='mt-3'>
-                    <button className='st-prof-action-btn text-success' onClick={() => setOpenUpdatePassword(true)}><span><i className='ri-key-fill'></i></span><span>Change Password</span></button>
+                    <button className='st-btn text-success' onClick={() => setOpenUpdatePassword(true)}><span><i className='ri-key-fill'></i></span><span>Change Password</span></button>
                 </div>
                 <div className='st-privacy-read-btn'><Link to="/settings/privacy"><span><i className="ri-article-line mx-2"></i></span><span>Read privacy terms</span></Link></div>
             </section>
             <section className='align-self-end'>
-                <button className='st-prof-action-btn st-col-ltred mt-3' onClick={() => setLogoutPopup(true)}>Log out</button>
+                <button className='st-btn st-col-ltred mt-3' onClick={() => setLogoutPopup(true)}><span><i className="ri-logout-box-line"></i> Log out</span></button>
             </section>
             <EditProfilePopup openState={editProfile} onClose={() => setEditProfile(false)} user={user} onProfileChange={() => setProfChangeState(!profChangeState)} />
             <ChangePasswordPopup openState={openUpdatePassword} onClose={() => setOpenUpdatePassword(false)} />
@@ -136,7 +148,7 @@ export const ProfileSettings = () => {
 
 const EditProfilePopup = ({ openState, onClose, user, onProfileChange }) => {
     const [openCropUp, setOpenCropUp] = useState(false);
-    const initImg = require('../assets/img/profile-img.png')
+    const initImg = require('../../assets/img/profile-img.png')
     const [inputImg, setInputImg] = useState(null);
     const [profImg, setProfImg] = useState(initImg)
     const [croppedFile, setCroppedFile] = useState(null)
@@ -236,7 +248,7 @@ const EditProfilePopup = ({ openState, onClose, user, onProfileChange }) => {
         }
         catch (error) {
             setLoading(false)
-            toast.error("Unable to update Profile", toastOptions)
+            toast.error("Unable to update Profile")
         }
     }
 
@@ -276,7 +288,7 @@ const EditProfilePopup = ({ openState, onClose, user, onProfileChange }) => {
                 </div>
                 <div className="st-popup-bottom mt-3">
                     <button className='st-popup-close-btn' onClick={() => onClose()}>Close</button>
-                    <button className='st-popup-action-btn' onClick={handleChangeSubmit} disabled={loading} >{loading && <Spinner />} Save changes</button>
+                    <button className='st-popup-action-btn' onClick={handleChangeSubmit} disabled={loading} >{loading ? <Spinner /> : "Save changes"}</button>
                 </div>
                 <CropImagePopup openState={openCropUp} imgSrc={inputImg} onClose={() => setOpenCropUp(false)} onCrop={handleCroppedImg} />
             </PopupWraper>
@@ -284,6 +296,7 @@ const EditProfilePopup = ({ openState, onClose, user, onProfileChange }) => {
     )
 }
 
+// crop image in 1:1 ratio
 const CropImagePopup = ({ openState, imgSrc, onClose, onCrop }) => {
     const [isCrop, setIsCrop] = useState(false)
     const [croppedImgFile, setCroppedImgFile] = useState(null)
@@ -335,9 +348,11 @@ const CropImagePopup = ({ openState, imgSrc, onClose, onCrop }) => {
     )
 }
 
+// passsword change popup
 const ChangePasswordPopup = ({ openState, onClose }) => {
     const [passwordInput, setPasswordInput] = useState({ oldPassword: '', newPassword: '' })
     const [showPassword, setShowPassword] = useState({ oldPassword: false, newPassword: false })
+    const [loading, setLoading] = useState(false);
 
     const handlePasswordChange = async () => {
         if (passwordInput.newPassword.length >= 8 && passwordInput.oldPassword) {
@@ -346,26 +361,29 @@ const ChangePasswordPopup = ({ openState, onClose }) => {
                 newPassword: passwordInput.newPassword,
             }
             try {
+                setLoading(true)
                 await axios.patch('/users/update-password', postData)
                     .then(() => {
-                        toast.success("Password updated", toastOptions)
+                        toast.success("Password updated")
                         onClose()
                     })
             } catch (error) {
+                setLoading(false);
                 if (error?.response?.status === 401) {
-                    toast.error("Old password is incorrect!", toastOptions)
+                    toast.error("Old password is incorrect!")
                 }
                 else {
-                    toast.error("Unable to upadte password", toastOptions)
+                    toast.error("Unable to upadte password")
                 }
             }
         }
         else if (passwordInput.newPassword.length < 8) {
-            toast.error("Minimum password length must be 8", toastOptions)
+            toast.error("Minimum password length must be 8")
         }
         else if (!passwordInput.oldPassword) {
-            toast.error("Old password is required", toastOptions)
+            toast.error("Old password is required")
         }
+        setLoading(false);
     }
 
     return (
@@ -403,16 +421,18 @@ const ChangePasswordPopup = ({ openState, onClose }) => {
             </div>
             <div className="st-popup-bottom">
                 <button className='st-popup-close-btn' onClick={() => onClose()}>Cancel</button>
-                <button className='st-popup-action-btn' onClick={handlePasswordChange} >Change password</button>
+                <button className='st-popup-action-btn' onClick={handlePasswordChange} >{loading ? <Spinner /> : "Change password"}</button>
             </div>
         </PopupWraper>
     )
 }
 
+// logout popup
 const LogoutPopup = ({ openState, onClose }) => {
-
+    const [loading, setLoading] = useState(false);
     const handleLogout = async () => {
         try {
+            setLoading(true)
             await axios.get(`/users/logout-user`)
                 .then(() => {
                     Cookies.remove('__access_str')
@@ -421,6 +441,7 @@ const LogoutPopup = ({ openState, onClose }) => {
         } catch (error) {
             // console.log(error);
         }
+        setLoading(false);
     }
 
     return (
@@ -430,14 +451,14 @@ const LogoutPopup = ({ openState, onClose }) => {
             </div>
             <div className='st-popup-bottom'>
                 <button className='st-popup-close-btn' onClick={() => onClose()} >Cancel</button>
-                <button className='st-popup-danger-action-btn' onClick={handleLogout} >Log out</button>
+                <button className='st-popup-danger-action-btn' onClick={handleLogout} disabled={loading}>{loading ? <Spinner /> : <span><i className="ri-logout-box-line"></i> Log out</span>}</button>
             </div>
         </PopupWraper>
     )
 }
 
 
-
+// privacy settings page
 export const PrivacySettings = () => {
     const navigate = useNavigate()
 

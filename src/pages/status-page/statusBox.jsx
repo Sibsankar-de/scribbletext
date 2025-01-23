@@ -1,19 +1,9 @@
 import React from 'react'
+import "./statusBox.style.css"
 import { Outlet } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import { useState, useEffect } from 'react'
-import axios from '../server/axios-setup'
-
-const toastOptions = {
-    autoClose: 5000,
-    position: 'top-center',
-    hideProgressBar: true,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-  }
+import axios from '../../server/axios-setup'
 
 export const StatusContactList = () => {
     const [currentUser, setCurrentUser] = useState(null)
@@ -25,7 +15,7 @@ export const StatusContactList = () => {
                         setCurrentUser(res?.data?.data)
                     })
             } catch (error) {
-                toast.error("Unable to fetch User", toastOptions)
+                toast.error("Unable to fetch User")
             }
         }
         fetchList()
@@ -44,7 +34,7 @@ export const StatusContactList = () => {
                         <div className='st-chat-contact-list-item'>
                             <a href="">
                                 <div className='st-chat-c-list-item-content'>
-                                    <div className='st-chat-contact-list-item-img'><img src={currentUser?.avatar || require('../assets/img/profile-img.png')} alt="" draggable={false} /></div>
+                                    <div className='st-chat-contact-list-item-img'><img src={currentUser?.avatar || require('../../assets/img/profile-img.png')} alt="" draggable={false} /></div>
                                     <div>
                                         <div className='st-contact-username st-chat-contact-para'>{currentUser?.userName}</div>
                                         <div>No status</div>
@@ -72,7 +62,6 @@ export const StatusContactList = () => {
                     </div>
                 </section>
             </div>
-            <ToastContainer />
         </>
     )
 }

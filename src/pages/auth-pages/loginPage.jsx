@@ -1,27 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { ToastContainer, toast } from 'react-toastify';
-import axios from '../server/axios-setup'
-import { Spinner } from '../utils/loader-spinner';
-import Cookies from "js-cookie"
+import "./loginPage.style.css"
+import { Link, Outlet } from 'react-router-dom'
+import { toast } from 'react-toastify';
+import axios from '../../server/axios-setup'
 
-const toastOptions = {
-    autoClose: 5000,
-    position: 'top-center',
-    hideProgressBar: true,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
+
+export const AuthenticationPage = () => {
+    return (
+        <main className='st-auth-container'>
+            <div className='st-log-box-back'>
+                <Outlet />
+            </div>
+        </main>
+    )
 }
-
 
 export const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [logInput, setLogInput] = useState({ userName: '', password: '' });
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState(null)
 
     const handleLogin = async () => {
         if ([logInput.password, logInput.userName].some(e => e !== '')) {
@@ -39,7 +36,6 @@ export const LoginPage = () => {
                 }
                 )
                     .then((res) => {
-                        Cookies.set("__access_str", res.data?.data?.accessToken, { expires: 15 })
                         setLoading(false)
                         if (res.status === 200) window.location.reload()
                     })
@@ -47,15 +43,34 @@ export const LoginPage = () => {
             } catch (error) {
                 setLoading(false)
                 if (error.response?.status === 401) {
-                    toast.error("Invalid user credentials", toastOptions)
+                    toast.error("Invalid user credentials")
                 } else {
-                    toast.error("Unable to log in", toastOptions)
+                    toast.error("Unable to log in")
                 }
             }
-        } else { toast.error("Username and password is required", toastOptions) }
+        } else { toast.error("Username and password is required") }
     }
 
-    useEffect(()=>{
+    // key events
+    const handleEnter = event => {
+        const form = event.target.form;
+        if (form) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                const currentInput = document.activeElement;
+
+                const inputs = Array.from(form.querySelectorAll("input"));
+                let currentIndex = inputs.indexOf(currentInput);
+                if (currentIndex >= 0 && currentIndex < inputs.length - 1) {
+                    inputs[currentIndex + 1].focus();
+                } else {
+                    handleLogin();
+                }
+            }
+        }
+    }
+
+    useEffect(() => {
         document.title = 'ScribbleText - Log in'
     }, [])
 
@@ -66,12 +81,12 @@ export const LoginPage = () => {
                 <p className='st-col-fade'>Start texting in a new way</p>
             </div>
             <div className="st-log-box-body st-login-box-body">
-                <form action="">
+                <form action="" onKeyDown={handleEnter}>
                     <div className='mb-4'>
-                        <input type="text" className='st-text-input' placeholder='Enter Username' autoFocus onChange={(e) => setLogInput({ ...logInput, userName: e.target.value })} />
+                        <input type="text" className='st-text-input' placeholder='Enter Username' autoFocus onChange={(e) => setLogInput({ ...logInput, userName: e.target.value })} autoComplete='username' />
                     </div>
                     <div className='mb-3 d-grid'>
-                        <input type={`${showPassword ? 'text' : 'password'}`} className='st-text-input st-text-limit-input' placeholder='Enter password' id='log-password-input' onChange={(e) => setLogInput({ ...logInput, password: e.target.value })} />
+                        <input type={`${showPassword ? 'text' : 'password'}`} className='st-text-input st-text-limit-input' placeholder='Enter password' id='log-password-input' onChange={(e) => setLogInput({ ...logInput, password: e.target.value })} autoComplete='current-password' />
 
                         <div htmlFor='log-password-input' className='st-show-passsword-btn st-col-fade' onClick={() => setShowPassword(!showPassword)}>
                             {!showPassword ?
@@ -80,13 +95,12 @@ export const LoginPage = () => {
                             }
                         </div>
                     </div>
-                    <div ><Link to="/signup">Create new account?</Link></div>
+                    <div ><Link to="/auth/signup">Create new account?</Link></div>
                 </form>
             </div>
             <div className="st-log-box-bottom">
-                <button className='st-log-action-btn' onClick={handleLogin} disabled={loading}>{loading && <Spinner />} Login</button>
+                <button className='st-log-action-btn' onClick={handleLogin} disabled={loading}>{loading ? "Loging..." : "Login"}</button>
             </div>
-            <ToastContainer />
         </div>
     )
 }
@@ -95,8 +109,6 @@ export const RegistrationPage = () => {
     const [showPassword, setShowPassword] = useState(false)
     const [logInput, setLogInput] = useState({ fullName: '', userName: '', password: '' });
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState(null)
-
 
     const inputChangeHandler = (field, e) => {
         const input = e.target.value;
@@ -142,13 +154,13 @@ export const RegistrationPage = () => {
 
             } catch (error) {
                 setLoading(false)
-                toast.error("Unable to Create account", toastOptions);
+                toast.error("Unable to Create account");
             }
         }
         else if (logInput.password?.length < 8) {
-            toast.error("Minimum password length is 8 ", toastOptions)
+            toast.error("Minimum password length is 8 ")
         }
-        else { toast.error("Enter fields corectly", toastOptions) }
+        else { toast.error("Enter fields corectly") }
     }
 
     const loginUser = async () => {
@@ -165,7 +177,6 @@ export const RegistrationPage = () => {
             }
             )
                 .then((res) => {
-                    Cookies.set("__access_str", res.data?.data?.accessToken, { expires: 15 })
                     setLoading(false)
                     if (res.status === 200) window.location.reload()
                 })
@@ -176,7 +187,26 @@ export const RegistrationPage = () => {
         }
     }
 
-    useEffect(()=>{
+    // key events
+    const handleEnter = event => {
+        const form = event.target.form;
+        if (form) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                const currentInput = document.activeElement;
+
+                const inputs = Array.from(form.querySelectorAll("input"));
+                let currentIndex = inputs.indexOf(currentInput);
+                if (currentIndex >= 0 && currentIndex < inputs.length - 1) {
+                    inputs[currentIndex + 1].focus();
+                } else {
+                    handleCreateAccount();
+                }
+            }
+        }
+    }
+
+    useEffect(() => {
         document.title = 'ScribbleText - new registration'
     }, [])
 
@@ -186,7 +216,7 @@ export const RegistrationPage = () => {
                 <h5>Create new account</h5>
             </div>
             <div className="st-log-box-body st-login-box-body">
-                <form action="">
+                <form action="" onKeyDown={handleEnter}>
                     <div className='mb-4'>
                         <div className='d-grid'>
                             <input type="text" className='st-text-input st-text-limit-input' placeholder='Enter Full name' onChange={(e) => inputChangeHandler('fullName', e)} value={logInput.fullName} />
@@ -220,9 +250,8 @@ export const RegistrationPage = () => {
                 </form>
             </div>
             <div className="st-log-box-bottom">
-                <button className='st-log-action-btn' onClick={handleCreateAccount} disabled={loading}>{loading && <Spinner />} Create account</button>
+                <button className='st-log-action-btn' onClick={handleCreateAccount} disabled={loading}>{loading ? "Creating..." : "Create account"}</button>
             </div>
-            <ToastContainer />
         </div>
     )
 }

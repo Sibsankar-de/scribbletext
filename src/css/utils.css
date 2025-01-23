@@ -2,7 +2,7 @@
     justify-self: end;
 }
 
-.st-btn {
+.st-add-contact-btn {
     border: none;
     background-color: transparent;
     color: inherit;
@@ -10,20 +10,24 @@
     transform-origin: center;
 }
 
-.st-btn:active {
+.st-add-contact-btn:active {
     scale: 0.95;
 }
 
 .st-col-fade {
-    color: var(--st-lt-white);
+    color: var(--st-lt-white) !important;
 }
 
 .st-col-ltred {
-    color: #b35353;
+    color: #b35353 !important;
 }
 
-.st-col-lblue{
-    color: #66a4ff;
+.st-col-lblue {
+    color: #66a4ff !important;
+}
+
+.st-col-lgreen {
+    color: var(--st-t-green) !important;
 }
 
 .st-text-small {
@@ -34,11 +38,46 @@
     list-style: inside;
 }
 
-.st-falign-prop{
+.st-falign-prop {
     display: flex;
     align-items: center;
     gap: 0.6em;
 }
+
+.c-pointer {
+    cursor: pointer;
+}
+
+.st-text-overflow {
+    max-height: 3em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    line-height: 1.5em;
+}
+
+/***** button css *****/
+.st-btn {
+    border: none;
+    background-color: #434343d3;
+    border-radius: 5px;
+    transition: 0.3s;
+    padding: 0.5em 1em;
+    display: flex;
+    gap: 0.5em;
+    color: inherit;
+}
+
+.st-btn:hover {
+    background-color: #7979795e;
+}
+
+.st-btn:active {
+    background-color: #333333;
+}
+
+/***** End button css *****/
+
 
 /* ***Scroll bar*** */
 .st-scrollbar-thin::-webkit-scrollbar {
@@ -58,17 +97,6 @@
     background-color: transparent;
 }
 
-/* ***Home Page Css*** */
-.st-chat-home-box {
-    width: calc(100vw - 3.5em - 2px - 22vw);
-    text-align: center;
-    height: calc(100vh - 3em);
-    background-color: var(--st-b-black);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
 
 /***** Input css *****/
 .st-text-input {
@@ -138,11 +166,12 @@
 }
 
 @keyframes slideAnim {
-    0%{
+    0% {
         transform: translateX(70vw);
         opacity: 0;
     }
-    100%{
+
+    100% {
         transform: translateX(0);
         opacity: 1;
     }
@@ -150,147 +179,25 @@
 
 /***** End Animations *****/
 
-/***** Popup css *****/
-.st-popup-back {
-    position: fixed;
-    height: 100vh;
-    width: 100vw;
-    background-color: #00000044;
-    top: 0;
-    left: 0;
-    backdrop-filter: blur(1px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-}
 
-.st-popup-box {
-    background-color: var(--st-b-black);
-    border-radius: 5px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    animation: popupInAnim 0.5s 1;
-    display: grid;
-    grid-template-rows: max-content;
-}
-
-@keyframes popupInAnim {
-    0% {
-        transform: translateY(40px);
-    }
-
-    100% {
-        transform: translateY(0px);
-    }
-}
-
-.st-popup-out-anim {
-    animation: popupOutAnim 0.5s 1;
-}
-
-@keyframes popupOutAnim {
-    0% {
-        transform: translateY(0px);
-    }
-
-    100% {
-        transform: translateY(40px);
-    }
-}
-
-.st-popup-head {
-    padding: 1em;
-    border-bottom: 1px solid #4d4d4d;
-    height: fit-content;
-    align-self: flex-start;
-}
-
-.st-popup-head h5 {
-    margin-bottom: 0;
-}
-
-.st-popup-body {
-    padding: 0.7em;
-    align-self: flex-start;
-    max-height: 90vh;
-    max-width: 70vw;
-    min-height: 10em;
-    min-width: 30em;
-    overflow: hidden;
-}
-
-.st-conf-popup-body {
-    padding: 2em;
-    min-width: 20em;
-    max-width: 27em;
-}
-
-.st-popup-bottom {
-    align-self: flex-end;
-    justify-self: flex-end;
-    padding: 0.7em 1em;
-    display: flex;
-    gap: 1em;
-}
-
-.st-popup-close-btn,
-.st-popup-action-btn,
-.st-popup-danger-action-btn {
-    background-color: transparent;
-    border: 1px solid transparent;
-    padding: 0.5em 0.9em;
-    border-radius: 5px;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-}
-
-.st-popup-close-btn {
-    background-color: #4242429a;
-    color: var(--st-lt-white);
-}
-
-.st-popup-action-btn {
-    background-color: var(--st-td-green);
-}
-
-.st-popup-danger-action-btn{
-    background-color: #b35353;
-    color: var(--st-nt-white);
-}
-
-.st-popup-close-btn:hover,
-.st-popup-action-btn:hover,
-.st-popup-danger-action-btn:hover {
-    filter: brightness(1.3);
-}
-
-.st-popup-close-btn:active,
-.st-popup-action-btn:active,
-.st-popup-danger-action-btn:active {
-    filter: brightness(0.8);
-}
-
-/***** End Popup css *****/
 /***** loader css *****/
-.st-loading-spinner{
+.st-loading-spinner {
     border-left: 4px solid var(--st-t-green);
     border-radius: 50%;
     animation: spinner1Anim 0.5s cubic-bezier(0.75, 0.34, 1, 0.94) infinite;
 }
 
 @keyframes spinner1Anim {
-    0%{
+    0% {
         rotate: 0deg;
     }
-    100%{
+
+    100% {
         rotate: 360deg;
     }
 }
 
-.st-f-page-loading-box{
+.st-f-page-loading-box {
     width: 100vw;
     height: 100vh;
     position: fixed;
@@ -304,22 +211,5 @@
     align-items: center;
     justify-content: center;
 }
+
 /***** End loader css *****/
-
-
-
-/***** Responsive CSS *****/
-@media only screen and (max-width: 768px) {
-    .st-chat-home-box{
-        display: none;
-    }
-
-}
-
-@media only screen and (max-width: 475px) {
-    .st-conf-popup-body{
-        max-width: 80vw;
-        min-width: 75vw;
-    }
-}
-/***** End Responsive CSS *****/

@@ -1,23 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import "./chatContactBox.style.css"
 import { useState, useRef, useEffect } from 'react'
-import { Link, Outlet, useNavigate } from 'react-router-dom'
-import { PopupWraper } from '../utils/popup-box'
-import axios from '../server/axios-setup'
+import { Link, Outlet, useNavigate, useParams } from 'react-router-dom'
+import { PopupWraper } from '../popup-box/popup-box'
+import axios from '../../server/axios-setup'
 import { toast, ToastContainer } from 'react-toastify'
-import { Spinner } from '../utils/loader-spinner'
-import { socket } from '../server/socket.io'
-import { getDateData } from './chatBox'
-
-const toastOptions = {
-    autoClose: 5000,
-    position: 'top-center',
-    hideProgressBar: true,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-}
+import { Spinner } from '../../utils/loader-spinner'
+import { socket } from '../../server/socket.io'
+import { getDateData } from '../../utils/format-date'
+import SocketContext from '../../contexts/SocketContext'
+import { ContactLoader } from '../loding-components/ContactLoader'
 
 export const ChatContactBox = () => {
 
@@ -47,6 +39,11 @@ export const ChatContactBox = () => {
                 setTriggerChange(!triggerChange)
             }
         })
+        socket.on('addMessage', (message) => {
+            if (message?.senderId === currentUser?._id || message?.recipientId === currentUser?._id) {
+                setTriggerChange(!triggerChange)
+            }
+        })
     })
 
 
@@ -61,7 +58,7 @@ export const ChatContactBox = () => {
                         setContactList(res.data?.data?.contactList)
                     })
             } catch (error) {
-                toast.error("Unable to get contactList", toastOptions)
+                toast.error("Unable to get contactList")
             }
         }
 
@@ -73,6 +70,7 @@ export const ChatContactBox = () => {
         setContactShowList(contactList)
     }, [contactList])
 
+    // handle contact search
     const [searchInput, setSearchInput] = useState('')
     useEffect(() => {
         let newList = []
@@ -86,6 +84,7 @@ export const ChatContactBox = () => {
         } else { setContactShowList(contactList) }
     }, [searchInput])
 
+    // handle new chat
     const handlePopupContactClick = (contact) => {
         const index = contactList?.findIndex(e => e._id === contact._id)
         if (index === -1) {
@@ -96,14 +95,17 @@ export const ChatContactBox = () => {
         setSearchInput('')
     }
 
+    // get connected user list
+    const { onlineUserList } = useContext(SocketContext);
+
     return (
-        <>
+        <div className='st-content-container'>
             <div className='st-chat-contact-box'>
-                <section className='st-contact-box-search-sec mb-3'>
+                <section className='st-contact-box-search-sec'>
                     <div className='st-contact-box-search-sec-p-1'>
-                        <div className='st-contact-box-head-img'><img src={require('../assets/img/logo.png')} alt="" width={25} draggable={false} /></div>
+                        <div className='st-contact-box-head-img'><img src={require('../../assets/img/logo.png')} alt="" width={25} draggable={false} /></div>
                         <div><h5 className='mb-0'>{window.innerWidth > 768 ? "Chats" : "ScribbleText"}</h5></div>
-                        <div className='st-justify-s-end'><button className='st-btn' onClick={() => setAddContOpen(true)}><i className="bi bi-pencil-square"></i></button></div>
+                        <div className='st-justify-s-end'><button className='st-add-contact-btn' onClick={() => setAddContOpen(true)}><i className="bi bi-pencil-square"></i></button></div>
                     </div>
                     <div>
                         <form action="" className='d-grid'>
@@ -113,46 +115,56 @@ export const ChatContactBox = () => {
                     </div>
                 </section>
 
-                <section className='ss-chat-contact-list-box' >
-                    <div>
-                        <ul className='st-chat-contact-list st-scrollbar-thin'>
-                            {!contactShowList && <div className='st-contactlist-loading-box'></div>}
-                            {contactShowList?.map((item, index) => {
-                                return <ContactListItem key={index} contact={item} currentUser={currentUser} />
-                            })}
-                            {contactShowList?.length === 0 &&
-                                <div className='text-center mt-5'>
-                                    <div className='mb-3'>Start chatting with others</div>
-                                    <div className='d-flex justify-content-center'><button className='st-popup-action-btn' onClick={() => setAddContOpen(true)}>Start new chat</button></div>
-                                </div>
-                            }
-                        </ul>
-                    </div>
+                <section className='st-chat-contact-list st-scrollbar-thin' >
+                    {!contactShowList && <ContactLoader />}
+                    {contactShowList?.map((item, index) => {
+                        return <ContactListItem key={index} contact={item} currentUser={currentUser} isUserOnline={onlineUserList?.includes(item?.recipientId) || false} />
+                    })}
+                    {contactShowList?.length === 0 &&
+                        <div className='text-center mt-5'>
+                            <div className='mb-3'>Start chatting with others</div>
+                            <div className='d-flex justify-content-center'><button className='st-popup-action-btn' onClick={() => setAddContOpen(true)}>Start new chat</button></div>
+                        </div>
+                    }
                 </section>
                 <ContactBoxPopup openState={addContOpen} onClose={() => setAddContOpen(false)} onContactClick={handlePopupContactClick} />
-                <ToastContainer />
             </div>
             <Outlet />
-        </>
+        </div>
     )
 }
 
-const ContactListItem = ({ contact, currentUser }) => {
+const ContactListItem = ({ contact, currentUser, onlineUserList, isUserOnline }) => {
     const [contMenuActive, setContMenuActive] = useState(false)
     const handleContextMenu = (e) => {
         e.preventDefault();
         e.stopPropagation()
         setContMenuActive(true);
     }
-
+    // last message
     const lastMessage = contact?.lastMessage
     const lastMessageTime = getDateData(lastMessage?.createdAt)?.timeString
+    // contact active ui
+    const params = useParams();
+    const contactId = params?.userId
+
+    const navigate = useNavigate();
+    // handle key event 
+    const handleEsc = (event) => {
+        if (window.location.pathname.includes("/chats/")) {
+            if (event.key === "Escape") {
+                navigate("/home");
+            }
+        }
+    }
+
     return (
-        <li className='st-chat-contact-list-item' onContextMenu={handleContextMenu}>
+        <li className={`st-chat-contact-list-item ${contact?.recipientId === contactId ? "st-chat-contact-list-item-active" : ""}`} onContextMenu={handleContextMenu} tabIndex={0} onKeyDown={handleEsc}>
             <Link to={`/home/chats/${contact?.recipientId}`}>
                 <div className='st-chat-c-list-item-content'>
                     <div className='st-chat-contact-list-item-img'>
-                        <img src={contact?.avatar || require('../assets/img/profile-img.png')} alt="" draggable={false} />
+                        <img src={contact?.avatar || require('../../assets/img/profile-img.png')} alt="" draggable={false} />
+                        {isUserOnline && <div className='st-online-flag'></div>}
                     </div>
                     <div>
                         <div className='st-contact-username-box'>
@@ -182,6 +194,8 @@ const ContactListItem = ({ contact, currentUser }) => {
 
 const ContextMenu = ({ activeState, closeFunc, userId }) => {
 
+
+    // handle context menu
     const contextMenuRef = useRef(null)
     useEffect(() => {
         const handleClose = (e) => {
@@ -208,11 +222,11 @@ const ContextMenu = ({ activeState, closeFunc, userId }) => {
         try {
             await axios.get(`/users/add-archive/${userId}`)
                 .then((res) => {
-                    toast.success("Contact added to Archive", toastOptions);
+                    toast.success("Contact added to Archive");
                     closeFunc()
                 })
         } catch (error) {
-            toast.error("Unable to Archive now", toastOptions)
+            toast.error("Unable to Archive now")
             // console.log(error);
         }
     }
@@ -311,7 +325,7 @@ const PopupContactListItem = ({ user, clickHandler }) => {
 
     return (
         <li className='st-popup-contact-box-item' onClick={() => clickHandler()} >
-            <div className='st-popup-contact-list-img'><img src={user?.avatar || require('../assets/img/profile-img.png')} alt="" /></div>
+            <div className='st-popup-contact-list-img'><img src={user?.avatar || require('../../assets/img/profile-img.png')} alt="" /></div>
             <div>
                 <div className='st-chat-cont-username'>{user?.fullName}</div>
                 <div className='st-text-small st-col-fade'>{user?.userName}</div>

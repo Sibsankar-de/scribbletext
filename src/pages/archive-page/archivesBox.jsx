@@ -1,19 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
-import axios from '../server/axios-setup'
-import { socket } from '../server/socket.io'
-
-const toastOptions = {
-    autoClose: 5000,
-    position: 'top-center',
-    hideProgressBar: true,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-}
+import axios from '../../server/axios-setup'
+import { socket } from '../../server/socket.io'
+import { ContactLoader } from '../../components/loding-components/ContactLoader'
 
 export const ArchivesBox = () => {
 
@@ -28,7 +18,7 @@ export const ArchivesBox = () => {
                         setCurrentUser(res?.data?.data)
                     })
             } catch (error) {
-                toast.error("Unable to fetch archived list", toastOptions)
+                toast.error("Unable to fetch archived list")
             }
         }
         fetchList()
@@ -56,7 +46,7 @@ export const ArchivesBox = () => {
                 <section className='ss-chat-contact-list-box'>
                     <div>
                         <ul className='st-chat-contact-list st-scrollbar-thin'>
-                            {!archiveList && <div className='st-contactlist-loading-box'></div>}
+                            {!archiveList && <ContactLoader />}
                             {archiveList?.length === 0 && <div className='text-center'>No contacts found</div>}
                             {archiveList?.map((contact, index) => {
                                 return (
@@ -66,7 +56,6 @@ export const ArchivesBox = () => {
                         </ul>
                     </div>
                 </section>
-                <ToastContainer />
             </div>
             <Outlet />
         </>
@@ -85,7 +74,7 @@ const ArchiveItem = ({ contact }) => {
         <li className='st-chat-contact-list-item' onContextMenu={handleContextMenu}>
             <Link to={`chats/${contact?._id}`}>
                 <div className='st-chat-c-list-item-content'>
-                    <div className='st-chat-contact-list-item-img'><img src={contact?.avatar || require('../assets/img/profile-img.png')} alt="" draggable={false} /></div>
+                    <div className='st-chat-contact-list-item-img'><img src={contact?.avatar || require('../../assets/img/profile-img.png')} alt="" draggable={false} /></div>
                     <div>
                         <div className='st-contact-username st-chat-contact-para'>{contact?.fullName}</div>
                         <div className='st-chat-contact-para'>{contact?.userName}</div>
@@ -128,11 +117,11 @@ const ContextMenu = ({ activeState, closeFunc, userId }) => {
         try {
             await axios.get(`/users/remove-archive/${userId}`)
                 .then((res) => {
-                    toast.success("Contact removed from archive list", toastOptions);
+                    toast.success("Contact removed from archive list");
                     closeFunc()
                 })
         } catch (error) {
-            toast.error("Unable to remove now", toastOptions)
+            toast.error("Unable to remove now")
 
         }
     }

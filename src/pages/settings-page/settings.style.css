@@ -67,6 +67,7 @@
     gap: 2em;
     align-items: center;
     align-self: flex-start;
+    margin-bottom: 1em;
 }
 
 .st-settings-profile-img-box {
@@ -109,25 +110,6 @@
     grid-auto-flow: column;
     align-items: center;
     gap: 0.7em;
-}
-
-.st-prof-action-btn {
-    border: none;
-    background-color: #434343d3;
-    border-radius: 5px;
-    transition: 0.3s;
-    color: inherit;
-    padding: 0.5em 1em;
-    display: flex;
-    gap: 0.5em;
-}
-
-.st-prof-action-btn:hover {
-    background-color: #7979795e;
-}
-
-.st-prof-action-btn:active {
-    background-color: #333333;
 }
 
 .st-privacy-list li {
@@ -202,7 +184,7 @@
 }
 
 @media only screen and (min-width: 769px) {
-    .st-privacy-read-btn{
+    .st-privacy-read-btn {
         display: none;
     }
 }
@@ -218,7 +200,7 @@
         max-width: unset;
         min-height: unset;
         max-height: unset;
-        height: calc(100vh - 3.5em);
+        height: calc(100svh - 3.5em);
         border-radius: 0;
         padding: 1em;
         overflow-x: hidden;
@@ -237,11 +219,10 @@
 
     .st-edit-prof-popup-box {
         width: 100vw;
-        height: 100vh;
+        height: 100svh;
         position: fixed;
         top: 0;
         left: 0;
-        padding-bottom: 3.5em;
     }
 
     .st-profile-update-pup-body {
@@ -257,31 +238,29 @@
 
     .st-crop-profile-img-popup {
         width: 100vw;
-        height: 100vh;
+        height: 100svh;
         position: fixed;
         top: 0;
         left: 0;
-        padding-bottom: 3.5em;
     }
 
     .st-prof-crop-img-box {
         max-width: unset !important;
         min-width: unset !important;
         width: 100%;
-        height: 70vh;
+        height: 70svh;
         padding: 0 !important;
     }
 
-    .st-password-change-popup-box{
+    .st-password-change-popup-box {
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
-        height: 100vh;
-        padding-bottom: 3.5em;
+        height: 100svh;
     }
 
-    .st-password-change-popup-box .st-popup-body{
+    .st-password-change-popup-box .st-popup-body {
         max-width: unset;
         min-width: unset;
     }
@@ -290,21 +269,22 @@
         max-width: unset;
     }
 
-    .st-privacy-read-btn{
+    .st-privacy-read-btn {
         margin-top: 2em;
-        & a{
+
+        & a {
             text-decoration: none;
             color: #46a9db;
         }
     }
 
-    .st-res-set-back{
+    .st-res-set-back {
         height: fit-content !important;
         align-items: unset !important;
         justify-content: unset !important;
     }
 
-    .st-privacy-policy-box{
+    .st-privacy-policy-box {
         padding-bottom: 4em;
     }
 
