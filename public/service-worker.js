@@ -2,6 +2,8 @@ self.addEventListener('push', function (event) {
     const data = event.data.json();
     const options = {
         body: data.body,
+        tag: 'chat-notifications',
+        renotify: true,
         icon: "/android-chrome-144x144.png",
         data: { url: data.url },
     };
